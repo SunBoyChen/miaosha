@@ -1,6 +1,8 @@
 package com.hua.miaosha.redis;
 
 import com.alibaba.fastjson.JSON;
+import com.hua.miaosha.domain.MiaoshaUser;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -11,6 +13,11 @@ public class RedisService {
 
     @Autowired
     private JedisPool jedisPool;
+
+    public static final int DEFULTEXPIRE = 2 * 60 * 60;
+
+
+
 
 
 

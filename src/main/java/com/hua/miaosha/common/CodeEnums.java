@@ -6,7 +6,12 @@ public enum CodeEnums {
     Error(-1,"error"),
 
     //登入异常 5002XX
-    LOGINOUTTIME(500201,"登入超时");
+    LOGINOUTTIME(500201,"登入超时"),
+    MOBILE_EMPTY(500202,"手机不能为空"),
+    PASSWORD_EMPTY(500203,"密码不能为空"),
+    MOBILE_ERROR(500204,"手机号码格式错误"),
+    USER_EMPTY(500205,"该用户不存在"),
+    PASSWORD_ERROR(500206,"密码错误");
 
     //商品异常  5003XX
 
@@ -42,6 +47,16 @@ public enum CodeEnums {
                 return Error;
             case 500201:
                 return LOGINOUTTIME;
+            case 500202:
+                return MOBILE_EMPTY;
+            case 500203:
+                return PASSWORD_EMPTY;
+            case 500204:
+                return MOBILE_ERROR;
+            case 500205:
+                return USER_EMPTY;
+            case 500206:
+                return PASSWORD_ERROR;
             default:
                 return null;
         }
