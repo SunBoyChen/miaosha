@@ -11,13 +11,17 @@ public enum CodeEnums {
     PASSWORD_EMPTY(500203,"密码不能为空"),
     MOBILE_ERROR(500204,"手机号码格式错误"),
     USER_EMPTY(500205,"该用户不存在"),
-    PASSWORD_ERROR(500206,"密码错误");
+    PASSWORD_ERROR(500206,"密码错误"),
+
 
     //商品异常  5003XX
 
     //订单异常   5004XX
 
     //秒杀异常   5004XX
+    MIAOSHA_OVER(500401,"秒杀结束"),
+    REPEATE_MIAOSHA(500402,"已参加过秒杀");
+
 
 
     private int code;
@@ -57,6 +61,10 @@ public enum CodeEnums {
                 return USER_EMPTY;
             case 500206:
                 return PASSWORD_ERROR;
+            case 500401:
+                return MIAOSHA_OVER;
+            case 500402:
+                return REPEATE_MIAOSHA;
             default:
                 return null;
         }
