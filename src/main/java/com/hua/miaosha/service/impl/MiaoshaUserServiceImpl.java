@@ -2,6 +2,7 @@ package com.hua.miaosha.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hua.miaosha.common.CodeEnums;
+import com.hua.miaosha.constants.RedisKeyConstants;
 import com.hua.miaosha.dao.MiaoshaUserMapper;
 import com.hua.miaosha.domain.MiaoshaUser;
 import com.hua.miaosha.exception.GlobalException;
@@ -32,11 +33,53 @@ public class MiaoshaUserServiceImpl implements MiaoshaUserService {
 
     @Override
     public MiaoshaUser getById(Long id) {
-        return miaoshaUserMapper.getById((id));
+        MiaoshaUser user = redisService.get(RedisKeyConstants.MIAOSHAUSER_KEY + id, MiaoshaUser.class);
+
+        if(user == null) {
+            user = miaoshaUserMapper.getById((id));
+            redisService.set(RedisKeyConstants.MIAOSHAUSER_KEY + id,user,-1);
+        }
+
+        return user;
     }
 
+    //修改密码同时同步缓存，并写入token
+    public boolean updatePassword(String token, long id, String formPass) {
+
+        MiaoshaUser user = this.getById(id);
+        if(user==null){
+            throw new GlobalException(CodeEnums.USER_EMPTY.getCode(),CodeEnums.USER_EMPTY.getDesc());
+        }
+
+        MiaoshaUser updateUser = new MiaoshaUser();
+
+        updateUser.setId(user.getId());
+        updateUser.setPassword(MD5Util.formPassToDBPass(formPass,user.getSalt()));
+
+
+
+        //一定要先跟新数据库，在删除缓存
+        //更新数据库
+        miaoshaUserMapper.updatePassword(updateUser);
+
+        //处理缓存
+        //删除用户
+        redisService.delete(RedisKeyConstants.MIAOSHAUSER_KEY +user.getId());
+
+        //跟新token信息(不能删除)
+        user.setPassword(updateUser.getPassword());
+        redisService.set(token, user,RedisService.DEFULTEXPIRE);
+
+        return true;
+    };
+
+
+
+
+
+
     @Override
-    public Boolean login(LoginVo loginVo, HttpServletResponse response) {
+    public String login(LoginVo loginVo, HttpServletResponse response) {
 
         String mobile = loginVo.getMobile();
         String password = loginVo.getPassword();
@@ -59,7 +102,7 @@ public class MiaoshaUserServiceImpl implements MiaoshaUserService {
         String token = UUIDUtil.uuid();
         addCookie(user,response,token);
 
-        return true;
+        return token;
     }
 
     @Override
@@ -67,6 +110,8 @@ public class MiaoshaUserServiceImpl implements MiaoshaUserService {
         if(StringUtils.isEmpty(token)){
             return null;
         }
+
+
         MiaoshaUser user = redisService.get(token, MiaoshaUser.class);
         //从新跟新cookie，以及redis
 

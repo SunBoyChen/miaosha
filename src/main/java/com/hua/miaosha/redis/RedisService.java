@@ -97,4 +97,19 @@ public class RedisService {
         }
     }
 
+    public boolean delete(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Long l = jedis.del(key);
+            return l>0;
+        }finally {
+            //放回连接池
+            if(jedis != null) {
+                jedis.close();
+            }
+        }
+
+
+    }
 }

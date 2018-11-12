@@ -25,4 +25,8 @@ public interface OrderMapper {
 
     @Insert("insert into miaosha_order (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
     int insertMiaoshaOrder(MiaoshaOrder order);
+
+
+    @Select("SELECT * FROM order_info WHERE id = #{orderId}")
+    OrderInfo getOrderById(@Param("orderId") long orderId);
 }

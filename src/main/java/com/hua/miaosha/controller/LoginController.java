@@ -41,12 +41,12 @@ public class LoginController {
 
     @RequestMapping(value = "/do_login",method = RequestMethod.POST)
     @ResponseBody
-    public Result<Boolean> doLogin(@Valid LoginVo loginVo, BindingResult bindingResult, HttpServletResponse response){
+    public Result<String> doLogin(@Valid LoginVo loginVo, BindingResult bindingResult, HttpServletResponse response){
 
 
         if(bindingResult.hasErrors()){
             logger.error("参数不正确, orderForm={}", loginVo);
-            return new Result<>(CodeEnums.Error,false);
+            return new Result<>(CodeEnums.Error,"");
         }
 
         logger.info(loginVo.toString());
@@ -63,16 +63,16 @@ public class LoginController {
             return new Result<>(CodeEnums.PASSWORD_EMPTY,false);
         }*/
 
-        Boolean b = miaoshaUserService.login(loginVo,response);
+        String token = miaoshaUserService.login(loginVo,response);
 
-        System.out.println(b);
-
-
+        System.out.println(token);
 
 
 
 
-        return new Result<>(CodeEnums.SUCCESS,true);
+
+
+        return new Result<>(CodeEnums.SUCCESS,token);
     }
 
 

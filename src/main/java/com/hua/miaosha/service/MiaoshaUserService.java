@@ -9,7 +9,7 @@ public interface MiaoshaUserService {
 
     MiaoshaUser getById(Long id);
 
-    Boolean login(LoginVo loginVo,HttpServletResponse response);
+    String login(LoginVo loginVo,HttpServletResponse response);
 
     MiaoshaUser getByToken(String token,HttpServletResponse response);
 }

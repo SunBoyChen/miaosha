@@ -1,7 +1,10 @@
 package com.hua.miaosha;
 
+import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
 public class MiaoshaApplication {
@@ -10,3 +13,4 @@ public class MiaoshaApplication {
 		SpringApplication.run(MiaoshaApplication.class, args);
 	}
 }
+
